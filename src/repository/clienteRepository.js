@@ -1,15 +1,26 @@
 import con from "./connection.js";
 
 
-export function inserir(cliente) {
+export async function inserir(cliente) {
   let comando = `
       insert into tb_cliente (nm_cliente, ds_cpf, ds_telefone, ds_email, ds_cnh)
                       values (?, ?, ?, ?, ?)
       `
 
+  let [resp] = await con.query(comando,
+    [
+      cliente.nome,
+      cliente.cpf,
+      cliente.telefone,
+      cliente.email,
+      cliente.cnh
+    ])
+  
+  cliente.id = resp.insertId;
+  return cliente;
 }
 
-export function consultar(nome) {
+export async  function consultar(nome) {
   let comando = `
       select id_cliente       as id,
              nm_cliente       as nome,
@@ -21,12 +32,13 @@ export function consultar(nome) {
        where nm_cliente like  ?
   `
 
-
+  let [dados] = await con.query(comando, ['%' + nome + '%'])
+  return dados;
 }
 
 
 
-export function alterar(id, cliente) {
+export async function alterar(id, cliente) {
   let comando = `
       update tb_cliente
          set nm_cliente   = ?,
@@ -37,14 +49,25 @@ export function alterar(id, cliente) {
        where id_cliente   = ?
   `
 
-
+  let [resp] = await con.query(comando,
+    [
+      cliente.nome,
+      cliente.cpf,
+      cliente.telefone,
+      cliente.email,
+      cliente.cnh,
+      id
+    ])
+  
+  return resp.affectedRows;
 }
 
-export function deletar(id) {
+export async function deletar(id) {
   let comando = `
       delete from tb_cliente
             where id_cliente = ?
   `
 
-  
+  let [resp] = await con.query(comando, [id]);
+  return resp.affectedRows;
 }
