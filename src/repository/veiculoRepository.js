@@ -39,7 +39,12 @@ export async function consultar(busca) {
           by id_veiculo
   `
 
-  let [dados] = await con.query(comando, ['%' + busca + '%', '%' + busca + '%', '%' + busca + '%'])
+  let [dados] = await con.query(comando,
+    [
+      '%' + busca + '%',
+      '%' + busca + '%',
+      '%' + busca + '%'
+    ])
   return dados;
 }
 
