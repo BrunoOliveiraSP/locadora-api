@@ -1,5 +1,5 @@
 import { inserir, consultar } from '../repository/veiculoRepository.js'
-import { buscarTipoPorId } from '../repository/tipoVeiculoRepository.js'
+import { buscarTipoPorId, listarTipos } from '../repository/tipoVeiculoRepository.js'
 import { Router } from "express";
 
 let endpoints = Router();
@@ -38,6 +38,18 @@ endpoints.post('/veiculo', async (req, resp) => {
 })
 
 
+endpoints.get('/veiculo/tipo', async (req, resp) => {
+  let r = await listarTipos();
+  resp.send(r);
+});
+
+
+
+endpoints.get('/veiculo', async (req, resp) => {
+  let busca = req.query.busca ?? '';
+  let r = await consultar(busca)
+  resp.send(r);
+})
 
 
 export default endpoints;
